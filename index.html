@@ -129,7 +129,7 @@ var custom_ss_ui = {paramKey:"af_ss_ui",defaultValue:"true"};
 
 //Call the function after embedding the code through a global parameter on the window object called window.AF_SMART_SCRIPT.
 //Onelink URL is generated.
-var result = window.AF_SMART_SCRIPT.generateOneLinkURL({
+window.result = window.AF_SMART_SCRIPT.generateOneLinkURL({
     oneLinkURL: oneLinkURL,
     afParameters: {
         mediaSource: mediaSource,
@@ -143,7 +143,7 @@ var result = window.AF_SMART_SCRIPT.generateOneLinkURL({
         ]
     }
 });
-    window.WM_CLICK_URL = (result && result.clickURL) ? result.clickURL : null;
+    window.WM_CLICK_URL = (window.result && window.result.clickURL) ? window.result.clickURL : null;
     console.log("AF OneLink clickURL:", window.WM_CLICK_URL);
   } catch (e) { window.WM_CLICK_URL = null; console.warn("AF Smart Script failed:", e); }
   </script>
@@ -258,6 +258,17 @@ var result = window.AF_SMART_SCRIPT.generateOneLinkURL({
       // tap anywhere on the banner to dismiss it
       result.addEventListener("click", function () { result.classList.remove("show"); });
     })();
+  </script>
+  <!-- ===== Wire OneLink clickURL onto any CTA buttons ===== -->
+  <script>
+  document.addEventListener("DOMContentLoaded", function () {
+    var fallbackOneLink = "https://wavemaster.onelink.me/dOx3/wm-google-w2a";
+    var smartUrl = (window.result && window.result.clickURL) ? window.result.clickURL
+                 : (window.WM_CLICK_URL || fallbackOneLink);
+    document.querySelectorAll("a.cta-button, #cta-button, .cta-button").forEach(function (b) {
+      b.setAttribute("href", smartUrl);
+    });
+  });
   </script>
 </body>
 </html>
